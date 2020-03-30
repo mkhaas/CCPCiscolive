@@ -285,7 +285,7 @@ For example, consider the system in Figure 1, with the following two containers 
 
 If **<code>Container0</code>** is the first container considered for allocation on the system, the following set of hints will be generated for the three topology-aware resource types in the spec.
 
-	                                **<code>cpu: {{01: True}, {10: True}, {11: False}}</code></strong>
+	**<code>cpu: {{01: True}, {10: True}, {11: False}}</code></strong>
 
 	**<code>gpu-vendor.com/gpu: {{01: True}, {10: True}}</code></strong>
 
