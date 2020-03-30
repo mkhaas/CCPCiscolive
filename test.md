@@ -286,9 +286,9 @@ For example, consider the system in Figure 1, with the following two containers 
 If **<code>Container0</code>** is the first container considered for allocation on the system, the following set of hints will be generated for the three topology-aware resource types in the spec.
 
 	               
-                               cpu: {{01: True}, {10: True}, {11: False}}
-	        gpu-vendor.com/gpu: {{01: True}, {10: True}}
-                nic-vendor.com/nic: {{01: True}, {10: True}}
+	cpu: {{01: True}, {10: True}, {11: False}}
+	gpu-vendor.com/gpu: {{01: True}, {10: True}}
+	nic-vendor.com/nic: {{01: True}, {10: True}}
 
 With a resulting aligned allocation of:
 
@@ -307,11 +307,10 @@ With a resulting aligned allocation of:
 
 When considering **<code>Container1</code>** these resources are then presumed to be unavailable, and thus only the following set of hints will be generated:
 
-	               **<code>cpu: {{01: True}, {10: True}, {11: False}}</code></strong>
-
-	**<code>gpu-vendor.com/gpu: {{10: True}}</code></strong>
-
-	**<code>nic-vendor.com/nic: {{10: True}}</code></strong>
+	
+	cpu: {{01: True}, {10: True}, {11: False}}
+	gpu-vendor.com/gpu: {{10: True}}
+	<code>nic-vendor.com/nic: {{10: True}}
 
 With a resulting aligned allocation of:
 
