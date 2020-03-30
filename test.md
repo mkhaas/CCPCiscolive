@@ -1,43 +1,9 @@
-<!----- Conversion time: 3.735 seconds.
-
-
-Using this Markdown file:
-
-1. Cut and paste this output into your source file.
-2. See the notes and action items below regarding this conversion run.
-3. Check the rendered output (headings, lists, code blocks, tables) for proper
-   formatting and use a linkchecker before you publish this page.
-
-Conversion notes:
-
-* Docs to Markdown version 1.0β20
-* Fri Mar 27 2020 15:31:49 GMT-0700 (PDT)
-* Source doc: Backup Kubernetes Topology Manager - Align Up!
-
-WARNING:
-Inline drawings not supported: look for ">>>>>  gd2md-html alert:  inline drawings..." in output.
-
-
-WARNING:
-You have 4 H1 headings. You may want to use the "H1 -> H2" option to demote all headings by one level.
-
------>
-
-
-<p style="color: red; font-weight: bold">>>>>>  gd2md-html alert:  ERRORs: 0; WARNINGs: 2; ALERTS: 5.</p>
-<ul style="color: red; font-weight: bold"><li>See top comment block for details on ERRORs and WARNINGs. <li>In the converted Markdown or HTML, search for inline alerts that start with >>>>>  gd2md-html alert:  for specific instances that need correction.</ul>
-
-<p style="color: red; font-weight: bold">Links to alert messages:</p><a href="#gdcalert1">alert1</a>
-<a href="#gdcalert2">alert2</a>
-<a href="#gdcalert3">alert3</a>
-<a href="#gdcalert4">alert4</a>
-<a href="#gdcalert5">alert5</a>
-
-<p style="color: red; font-weight: bold">>>>>> PLEASE check and correct alert issues and delete this message and the inline alerts.<hr></p>
-
-
-
-# Kubernetes Topology Manager Moves to Beta - Align Up!
+---
+layout: blog
+title: "Kubernetes Topology Manager Moves to Beta - Align Up!"
+date: 2019-12-09
+slug: kubernetes-1-17-feature-csi-migration-beta
+---
 
 **Authors:** Kevin Klues (NVIDIA), Victor Pickard (RedHat), Conor Nolan (Intel)
 
@@ -47,16 +13,13 @@ Prior to the introduction of the **<code>TopologyManager</code>**, the CPU and D
 
 This blog post covers:
 
-
-
 1. A brief introduction to NUMA and why it is important
 2. The policies available to end-users to ensure NUMA alignment of CPUs and devices
 3. The internal details of how the **<code>TopologyManager</code>** works
 4. Current limitations of the <strong><code>TopologyManager</code></strong>
 5. Future directions of the <strong><code>TopologyManager</code></strong>
 
-
-# So, what is NUMA and why do I care?
+## So, what is NUMA and why do I care?
 
 The term NUMA stands for Non-Uniform Memory Access. It is a technology available on multi-cpu systems that allows different CPUs to access different parts of memory at different speeds. Any memory directly connected to a CPU is considered “local” to that CPU and can be accessed very fast. Any memory not directly connected to a CPU is considered “non-local” and will have variable access times depending on how many interconnects must be passed through in order to reach it. On modern systems, the idea of having “local” vs. “non-local” memory can also be extended to peripheral devices such as NICs or GPUs. For high performance, CPUs and devices should be allocated such that they have access to the same local memory.
 
@@ -65,7 +28,6 @@ All memory on a NUMA system is divided into a set of “NUMA nodes”, with each
 We talk about a peripheral device as being part of a NUMA node based on the shortest number of interconnects that must be passed through in order to reach it.
 
 For example, in Figure 1, CPUs 0-3 are said to be part of NUMA node 0, whereas CPUs 4-7 are part of NUMA node 1. Likewise GPU 0 and NIC 0 are said to be part of NUMA node 0 because they are attached to Socket 0, whose CPUs are all part of NUMA node 0. The same is true for GPU 1 and NIC 1 on NUMA node 1.
-
 
 
 <p id="gdcalert1" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline drawings not supported directly from Docs. You may want to copy the inline drawing to a standalone drawing and export by reference. See <a href="https://github.com/evbacher/gd2md-html/wiki/Google-Drawings-by-reference">Google Drawings by reference</a> for details. The img URL below is a placeholder. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert2">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
@@ -89,8 +51,6 @@ The **<code>TopologyManager</code>** has been built to handle all of these scena
 ![drawing](https://docs.google.com/a/google.com/drawings/d/12345/export/png)
 
 As previously stated, the **<code>TopologyManager</code>** allows users to align their CPU and peripheral device allocations by NUMA node. There are several policies available for this:
-
-
 
 *   **<code>none:</code>** this policy will not attempt to do any alignment of resources. It will act the same as if the <strong><code>TopologyManager</code></strong> were not present at all. This is the default policy.
 *   <strong><code>best-effort:</code> </strong>with this policy, the <strong><code>TopologyManager</code></strong> will attempt to align allocations on NUMA nodes as best it can, but will always allow the pod to start even if some of the allocated resources are not aligned on the same NUMA node.
@@ -168,7 +128,7 @@ And that’s it! Just follow this pattern to have the **<code>TopologyManager</c
 **NOTE: **if a pod is rejected by one of the **<code>TopologyManager</code>** policies, it will be placed in a <strong><code>Terminated</code></strong> state with a pod admission error and a reason of "<strong><code>TopologyAffinityError</code></strong>". Once a pod is in this state, the Kubernetes scheduler will not attempt to reschedule it. It is therefore recommended to use a <strong><code>[Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#creating-a-deployment)</code></strong> with replicas to trigger a redeploy of the pod on such a failure. An [external control loop](https://kubernetes.io/docs/concepts/architecture/controller/) can also be implemented to trigger a redeployment of pods that have a <strong><code>TopologyAffinityError</code></strong>.
 
 
-# This is great, so how does it work under the hood?
+## This is great, so how does it work under the hood?
 
 Pseudocode for the primary logic carried out by the **<code>TopologyManager</code>** can be seen below:
 
@@ -268,12 +228,7 @@ In this way, it is possible for a **<code>HintProvider</code>** to return a list
 In this case, the only generated hint would be **<code>{11: False}</code>** and not <strong><code>{11: True}</code></strong>. This happens because it <em>is</em> possible to allocate 2 CPUs from the same NUMA node on this system (just not right now, given the current allocation state). The idea being that it is better to fail pod admission and retry the deployment when the minimal alignment can be satisfied than to allow a pod to be scheduled with sub-optimal alignment.
 
 
-```
-
-
-## HintProviders
-```
-
+### HintProviders
 
 A **<code>HintProvider</code>** is a component internal to the <strong><code>kubelet</code></strong> that coordinates aligned resource allocations with the <strong><code>TopologyManager</code></strong>. At present, the only <strong><code>HintProviders</code></strong> in Kubernetes are the <strong><code>CPUManager</code></strong> and the <strong><code>DeviceManager</code></strong>. We plan to add support for <strong><code>HugePages</code></strong> soon.
 
@@ -392,20 +347,11 @@ type Store interface {
 
 Separating this out into its own API call allows one to access this hint outside of the pod admission loop. This is useful for debugging as well as for reporting generated hints in tools such as **<code>kubectl</code> **(not yet available).
 
-
-```
-
-
-## Policy.Merge
-```
-
+### Policy.Merge
 
 The merge strategy defined by a given policy dictates how it combines the set of **<code>TopologyHints</code>** generated by all <strong><code>HintProviders</code></strong> into a single <strong><code>TopologyHint</code></strong> that can be used to inform aligned resource allocations.
 
 The general merge strategy for all supported policies begins the same:
-
-
-
 1. Take the cross-product of **<code>TopologyHints</code>** generated for each resource type
 2. For each entry in the cross-product, <strong><code>bitwise-and</code></strong> the NUMA affinities of each <strong><code>TopologyHint</code></strong> together. Set this as the NUMA affinity in a resulting “merged” hint.
 3. If all of the hints in an entry have <strong><code>Preferred</code></strong> set to <strong> <code>True</code></strong> , set <strong><code>Preferred</code></strong> to <strong><code>True</code></strong> in the resulting “merged” hint.
@@ -533,9 +479,6 @@ The above algorithm results in the following set of cross-product entries and �
 Once this list of “merged” hints has been generated, it is the job of the specific **<code>TopologyManager</code>** policy in use to decide which one to consider as the “best” hint.
 
 In general, this involves:
-
-
-
 1. Sorting merged hints by their “narrowness”. Narrowness is defined as the number of bits set in a hint’s NUMA affinity mask. The fewer bits set, the narrower the hint. For hints that have the same number of bits set in their NUMA affinity mask, the hint with the most low order bits set is considered narrower.
 2. Sorting merged hints by their **<code>Preferred</code>** field. Hints that have <strong><code>Preferred</code></strong> set to <strong><code>True</code></strong> are considered more likely candidates than hints with <strong><code>Preferred</code></strong> set to <strong><code>False</code></strong>.
 3. Selecting the narrowest hint with the best possible setting for <strong><code>Preferred</code></strong>.
@@ -546,8 +489,7 @@ However, in the case of the **<code>restricted</code>** and <strong><code>single
 
 In the example above, the pod would be admitted by all policies with a hint of **<code>{01: True}</code>**.
 
-
-# Upcoming enhancements
+## Upcoming enhancements
 
 While the 1.18 release and promotion to Beta brings along some great enhancements and fixes, there are still a number of limitations, described [here](https://kubernetes.io/docs/tasks/administer-cluster/topology-manager/#known-limitations). We are already underway working to address these limitations and more.
 
@@ -555,8 +497,7 @@ This section walks through the set of enhancements we plan to implement for the 
 
 If you would like to get involved in helping with any of these enhancements, please [join the weekly Kubernetes SIG-node meetings](https://github.com/kubernetes/community/tree/master/sig-node) to learn more and become part of the community effort!
 
-
-## Supporting device-specific constraints
+### Supporting device-specific constraints
 
 Currently, NUMA affinity is the only constraint considered by the **<code>TopologyManager</code>** for resource alignment. Moreover, the only scalable extensions that can be made to a <strong><code>TopologyHint</code></strong> involve <em>node-level</em> constraints, such as PCIe bus alignment across device types. It would be intractable to try and add any <em>device-specific</em> constraints to this struct (e.g. the internal NVLINK topology among a set of GPU devices).
 
@@ -564,15 +505,14 @@ As such, we propose an extension to the device plugin interface that will allow 
 
 Details of this proposal can be found [here](https://github.com/kubernetes/enhancements/pull/1121), and should be available as soon as Kubernetes 1.19.
 
-
-## NUMA alignment for hugepages
+### NUMA alignment for hugepages
 
 As stated previously, the only two **<code>HintProviders</code>** currently available to the <strong><code>TopologyManager</code> </strong>are the <strong><code>CPUManager</code></strong> and the <strong><code>DeviceManager</code></strong>. However, work is currently underway to add support for hugepages as well. With the completion of this work, the <strong><code>TopologyManager</code></strong> will finally be able to allocate memory, hugepages, CPUs and PCI devices all on the same NUMA node.
 
 A [KEP](https://github.com/kubernetes/enhancements/blob/253f1e5bdd121872d2d0f7020a5ac0365b229e30/keps/sig-node/20200203-memory-manager.md) for this work is currently under review, and a prototype is underway to get this feature implemented very soon.
 
 
-## Scheduler awareness
+### Scheduler awareness
 
 Currently, the **<code>TopologyManager</code>** acts as a Pod Admission controller. It is not directly involved in the scheduling decision of where a pod will be placed. Rather, when the kubernetes scheduler (or whatever scheduler is running in the deployment), places a pod on a node to run, the <strong><code>TopologyManager</code></strong> will decide if the pod should be “admitted” or “rejected”. If the pod is rejected due to lack of available NUMA aligned resources, things can get a little interesting. This kubernetes [issue](https://github.com/kubernetes/kubernetes/issues/84869) highlights and discusses this situation well.
 
@@ -589,7 +529,7 @@ The details of how to implement these extensions for integration with the **<cod
 Work on this feature should begin in the next couple of months, so stay tuned!
 
 
-## Per-pod alignment policy
+### Per-pod alignment policy
 
 As stated previously, a single policy is applied to _all_ pods on a node via a global **<code>kubelet</code>** flag, rather than allowing users to select different policies on a pod-by-pod basis (or a container-by-container basis).
 
@@ -597,8 +537,7 @@ While we agree that this would be a great feature to have, there are quite a few
 
 We are only now starting to have serious discussions around this feature, and it is still a few releases away, at the best, from being available.
 
-
-# Conclusion
+## Conclusion
 
 With the promotion of the **<code>TopologyManager</code>** to Beta in 1.18, we encourage everyone to give it a try and look forward to any feedback you may have. Many fixes and enhancements have been worked on in the past several releases, greatly improving the functionality and reliability of the <strong><code>TopologyManager</code></strong> and its <strong><code>HintProviders</code></strong>. While there are still a number of limitations, we have a set of enhancements planned to address them, and look forward to providing you with a number of new features in upcoming releases.
 
