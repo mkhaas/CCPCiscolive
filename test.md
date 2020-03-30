@@ -169,13 +169,7 @@ The steps themselves are:
 
 The following sections go into more detail on the exact structure of <strong><code>TopologyHints</code></strong> and <strong><code>HintProviders</code></strong>, as well as some details on the merge strategies used by each policy.
 
-
-```
-
-
-## TopologyHints
-```
-
+### TopologyHints
 
 A **<code>TopologyHint</code>** encodes a set of constraints from which a given resource request can be satisfied. At present, the only constraint we consider is NUMA alignment. It is defined as follows:
 
