@@ -310,7 +310,7 @@ When considering **<code>Container1</code>** these resources are then presumed t
 	
 	cpu: {{01: True}, {10: True}, {11: False}}
 	gpu-vendor.com/gpu: {{10: True}}
-	<code>nic-vendor.com/nic: {{10: True}}
+	nic-vendor.com/nic: {{10: True}}
 
 With a resulting aligned allocation of:
 
