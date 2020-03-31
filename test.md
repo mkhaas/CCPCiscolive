@@ -5,7 +5,7 @@ date: 2020-03-30
 slug: kubernetes-1-18-feature-topoloy-manager-beta
 ---
 
-**Authors:** Kevin Klues (NVIDIA), Victor Pickard (RedHat), Conor Nolan (Intel)
+**Authors:** Kevin Klues (NVIDIA), Victor Pickard (Red Hat), Conor Nolan (Intel)
 
 This blog post describes the **<code>TopologyManager</code>**, a beta feature of Kubernetes in release 1.18. The **<code>TopologyManager</code>** feature enables NUMA alignment of CPUs and peripheral devices (such as SR-IOV VFs and GPUs), allowing your workload to run in an environment optimized for low-latency.
 
